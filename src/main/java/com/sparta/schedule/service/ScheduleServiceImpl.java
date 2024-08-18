@@ -7,6 +7,9 @@ import com.sparta.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService{
@@ -26,5 +29,10 @@ public class ScheduleServiceImpl implements ScheduleService{
     public ScheduleResponseDto getSchedule(Long id) {
         Schedule schedule = scheduleRepository.findById(id);
         return ScheduleResponseDto.from(schedule);
+    }
+
+    @Override
+    public List<Schedule> getScheduleByNameAndModDate(String name, LocalDate modDate) {
+        return scheduleRepository.findByNameAndModDate(name, modDate);
     }
 }
