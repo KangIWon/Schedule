@@ -14,4 +14,6 @@ public interface ScheduleService {
 
     List<Schedule> getScheduleByNameAndModDate(String name, LocalDate modDate);
 
+    Schedule updateScheduleByTaskAndName(Long id, ScheduleRequestDto scheduleRequestDto);
+
 }

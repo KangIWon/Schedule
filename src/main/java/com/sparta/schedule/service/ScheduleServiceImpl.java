@@ -7,8 +7,10 @@ import com.sparta.schedule.repository.ScheduleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -34,5 +36,21 @@ public class ScheduleServiceImpl implements ScheduleService{
     @Override
     public List<Schedule> getScheduleByNameAndModDate(String name, LocalDate modDate) {
         return scheduleRepository.findByNameAndModDate(name, modDate);
+    }
+
+    @Override
+    public Schedule updateScheduleByTaskAndName(Long id, ScheduleRequestDto scheduleRequestDto) {
+        Schedule schedule = scheduleRepository.findById(id);
+        if (!schedule.getPassword().equals(scheduleRequestDto.getPassword())) {
+            throw new NoSuchElementException("Password does not match");
+        }
+        Schedule update = Schedule.builder()
+                .id(id)
+                .task(scheduleRequestDto.getTask())
+                .name(scheduleRequestDto.getName())
+                .password(scheduleRequestDto.getPassword())
+                .modDate(Timestamp.valueOf(schedule.getModDate()).toLocalDateTime())
+                .build();
+        return scheduleRepository.update(update);
     }
 }

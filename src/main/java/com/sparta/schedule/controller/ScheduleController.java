@@ -3,6 +3,7 @@ package com.sparta.schedule.controller;
 import com.sparta.schedule.Dto.ScheduleRequestDto;
 import com.sparta.schedule.Dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
+import com.sparta.schedule.repository.ScheduleRepository;
 import com.sparta.schedule.service.ScheduleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -42,5 +43,15 @@ public class ScheduleController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(schedules);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Schedule> updateSchedule(@PathVariable Long id, @RequestBody ScheduleRequestDto scheduleRequestDto) {
+        if (scheduleRequestDto.getPassword() == null || scheduleRequestDto.getPassword().isEmpty()) {
+            throw new IllegalArgumentException("Password cannot be empty");
+        }
+        Schedule update = scheduleServiceImpl.updateScheduleByTaskAndName(id,scheduleRequestDto);
+        log.info("Update schedule: {}", update);
+        return ResponseEntity.ok(update);
     }
 }

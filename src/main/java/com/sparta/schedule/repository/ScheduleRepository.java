@@ -80,6 +80,27 @@ public class ScheduleRepository {
         return jdbcTemplate.query(sql.toString(),new ScheduleRowMapper(),params.toArray());
     }
 
+    public Schedule update(Schedule schedule) {
+        String sql = "UPDATE schedule SET task = ?, name = ?, modDate = ? WHERE id = ?";
+        LocalDateTime currentTime = LocalDateTime.now();
+        // Schedule의 modDate를 업데이트하고 저장
+        jdbcTemplate.update(sql, schedule.getTask(), schedule.getName(), currentTime, schedule.getId());
+        // 업데이트 후, 변경된 schedule 객체를 변환
+        return Schedule.builder()
+                .id(schedule.getId())
+                .task(schedule.getTask())
+                .name(schedule.getName())
+                .regDate(currentTime)
+                .modDate(currentTime)
+                .build();
+    }
+
+    // 1. entity 자성
+    // 2. Dto 작성
+    // 3. Repository 작성
+    // 4. Service 작성
+    // 5. Controller 작성
+    // 6. postman 테스트
 
     private static class ScheduleRowMapper implements RowMapper<Schedule> {
         @Override

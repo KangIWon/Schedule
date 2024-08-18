@@ -1,5 +1,6 @@
 package com.sparta.schedule.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jdk.jfr.Timestamp;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Schedule {
     // 담당자명
     private String name;
     // 비밀번호
+    @JsonIgnore
     private String password;
     // 작성일
     @Timestamp
