@@ -16,4 +16,6 @@ public interface ScheduleService {
 
     Schedule updateScheduleByTaskAndName(Long id, ScheduleRequestDto scheduleRequestDto);
 
+    void deleteScheduleById(Long id);
+
 }

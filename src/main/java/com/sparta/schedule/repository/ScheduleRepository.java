@@ -8,6 +8,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.*;
 import javax.swing.plaf.basic.BasicTableUI;
 import javax.swing.plaf.basic.BasicTreeUI;
 import java.sql.PreparedStatement;
@@ -18,6 +19,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 @Repository
@@ -101,6 +103,21 @@ public class ScheduleRepository {
     // 4. Service 작성
     // 5. Controller 작성
     // 6. postman 테스트
+
+    public int deleteById(Long id) {
+        String sql = "DELETE FROM schedule WHERE id = ?";
+        return jdbcTemplate.update(sql, id);
+    }
+
+    public List<Schedule> findAll() {
+        String sql = "SELECT * FROM schedule";
+        try {
+            return jdbcTemplate.query(sql, new ScheduleRowMapper());
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new NoSuchElementException("");
+        }
+    }
 
     private static class ScheduleRowMapper implements RowMapper<Schedule> {
         @Override

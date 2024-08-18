@@ -39,6 +39,12 @@ public class ScheduleServiceImpl implements ScheduleService{
     }
 
     @Override
+    public void deleteScheduleById(Long id) {
+        scheduleRepository.deleteById(id);
+
+    }
+
+    @Override
     public Schedule updateScheduleByTaskAndName(Long id, ScheduleRequestDto scheduleRequestDto) {
         Schedule schedule = scheduleRepository.findById(id);
         if (!schedule.getPassword().equals(scheduleRequestDto.getPassword())) {
