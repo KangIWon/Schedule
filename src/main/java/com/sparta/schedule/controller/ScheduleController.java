@@ -1,15 +1,13 @@
 package com.sparta.schedule.controller;
 
 import com.sparta.schedule.Dto.ScheduleRequestDto;
+import com.sparta.schedule.Dto.ScheduleResponseDto;
 import com.sparta.schedule.entity.Schedule;
 import com.sparta.schedule.service.ScheduleServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,4 +22,12 @@ public class ScheduleController {
         return ResponseEntity.ok(scheduleServiceImpl.createSchedule(scheduleRequestDto));
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> getById(@PathVariable Long id) {
+        if (scheduleServiceImpl.getSchedule(id)==null) {
+            return ResponseEntity.notFound().build();
+        }
+        log.info("Get by Id: {}", id);
+        return ResponseEntity.ok(scheduleServiceImpl.getSchedule(id));
+    }
 }

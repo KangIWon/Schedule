@@ -1,6 +1,7 @@
 package com.sparta.schedule.repository;
 
 import com.sparta.schedule.entity.Schedule;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +13,7 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -33,8 +35,8 @@ public class ScheduleRepository {
             ps.setString(1,schedule.getTask());
             ps.setString(2,schedule.getName());
             ps.setString(3,schedule.getPassword());
-            ps.setObject(4,schedule.getRegDate());
-            ps.setObject(5,schedule.getModDate());
+            ps.setObject(4, Timestamp.valueOf(currentTime));
+            ps.setObject(5,Timestamp.valueOf(currentTime));
             return ps;
         },keyHolder);
         Long newId = Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -47,9 +49,17 @@ public class ScheduleRepository {
                 .modDate(currentTime)
                 .build();
     }
+    public Schedule findById(Long id) {
+        String sql = "SELECT * FROM schedule WHERE id=?";
+        try {
+            return jdbcTemplate.queryForObject(sql, new ScheduleRowMapper(), id);
+        }
+        catch (EmptyResultDataAccessException e) {
+            throw new RuntimeException("일정이 없습니다.");
+        }
+    }
 
     private static class ScheduleRowMapper implements RowMapper<Schedule> {
-
         @Override
         public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
             return Schedule.builder()
